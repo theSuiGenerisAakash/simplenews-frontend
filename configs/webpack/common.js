@@ -2,6 +2,7 @@
 const { resolve } = require("path")
 const { CheckerPlugin } = require("awesome-typescript-loader")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const webpack = require("webpack")
 
 module.exports = {
     resolve: {
