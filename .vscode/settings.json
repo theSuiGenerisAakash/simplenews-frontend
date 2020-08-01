@@ -1,0 +1,33 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "node_modules": true
+    },
+    "eslint.debug": true,
+    "eslint.format.enable": true,
+    "eslint.alwaysShowStatus": true,
+    "eslint.lintTask.enable": true,
+    "eslint.packageManager": "yarn",
+    "less.lint.duplicateProperties": "warning",
+    "scss.lint.duplicateProperties": "warning",
+    "css.lint.duplicateProperties": "warning",
+    "scss.lint.float": "warning",
+    "css.lint.float": "warning",
+    "scss.lint.universalSelector": "warning",
+    "scss.lint.unknownVendorSpecificProperties": "warning",
+    "scss.lint.important": "warning",
+    "scss.lint.idSelector": "warning",
+    "prettier.packageManager": "yarn",
+    "prettier.requireConfig": true,
+    "prettier.tabWidth": 4,
+    "eslint.enable": true,
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "[javascript, typescript, scss, sass]": { "editor.formatOnSave": true }
+}
