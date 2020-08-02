@@ -1,19 +1,16 @@
 import * as React from "react"
 import { hot } from "react-hot-loader"
+import { AuthContext } from "../context/auth"
 
-const reactLogo = require("./../assets/img/react_logo.svg")
-import "./../assets/scss/App.scss"
+// import Header from "./Header"
+import Router from "./Router"
 
-class App extends React.Component<Record<string, unknown>, undefined> {
-    public render() {
-        return (
-            <div className="app">
-                <h1>Hello World!</h1>
-                <p>Foo to the barz</p>
-                <img src={reactLogo.default} height="480" />
-            </div>
-        )
-    }
+function App() {
+    return (
+        <AuthContext.Provider value={true}>
+            <Router />
+        </AuthContext.Provider>
+    )
 }
 
 declare let module: Record<string, unknown>
