@@ -14,12 +14,13 @@ module.exports = function (apiHost) {
         ],
         devServer: {
             hot: true, // enable HMR on the server
-            historyApiFallback: true
+            historyApiFallback: true,
+            proxy: { "/api/v1.0/**": { target: "http://localhost:4000", secure: false } }
         },
         devtool: "cheap-module-eval-source-map",
         plugins: [
             new webpack.HotModuleReplacementPlugin(), // enable HMR globally
-            new webpack.DefinePlugin({ "process.env.apiHost": JSON.stringify(apiHost) })
+            new webpack.DefinePlugin({ "process.env": JSON.stringify(apiHost) })
         ]
     })
 }
