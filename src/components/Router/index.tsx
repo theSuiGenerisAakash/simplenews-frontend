@@ -1,16 +1,20 @@
-import React = require("react")
+import React from "react"
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
-import Login from "../../components/Login"
+import LoaderPage from "../../pages/LoaderPage"
+const LoginPage = React.lazy(() => import("../../pages/LoginPage"))
+
 import PrivateRoute from "../Router/privateRoute"
 
-export default function AuthExample(): any {
+export default function SNRoutes(): any {
     return (
         <Router>
-            <Switch>
-                <PrivateRoute exact path="/" component={Login} />
-                <Route exact path="/login" component={Login} />
-                <Redirect from="*" to="/" />
-            </Switch>
+            <React.Suspense fallback={LoaderPage()}>
+                <Switch>
+                    <PrivateRoute exact path="/" component={LoginPage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Redirect from="*" to="/" />
+                </Switch>
+            </React.Suspense>
         </Router>
     )
 }
