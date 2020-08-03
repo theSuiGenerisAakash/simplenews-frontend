@@ -1,14 +1,17 @@
 import * as React from "react"
 import { hot } from "react-hot-loader"
 import { AuthContext } from "../context/auth"
+import theme from "../assets/styles/globalStyles"
+import { ThemeProvider } from "styled-components"
 
-// import Header from "./Header"
 import Router from "./Router"
 
 function App() {
     return (
         <AuthContext.Provider value={true}>
-            <Router />
+            <ThemeProvider theme={theme}>
+                <Router />
+            </ThemeProvider>
         </AuthContext.Provider>
     )
 }
