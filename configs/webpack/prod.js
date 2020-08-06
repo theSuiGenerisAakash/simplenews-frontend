@@ -14,6 +14,6 @@ module.exports = function (apiHost) {
             publicPath: "/"
         },
         devtool: "source-map",
-        plugins: [new webpack.DefinePlugin({ "process.env.apiHost": JSON.stringify(apiHost) })]
+        plugins: [new webpack.DefinePlugin({ "process.env": JSON.stringify(apiHost) })]
     })
 }
