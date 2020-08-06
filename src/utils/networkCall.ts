@@ -26,7 +26,7 @@ export const networkCall = async (pathWithParams: string, method: HTTP_VERBS, pa
                     console.log(response)
                     resBody = { message: response.statusText }
                 }
-                if (pathWithParams !== "/auth/login") {
+                if (pathWithParams !== "/auth/login" && pathWithParams !== "/users/new-user") {
                     if (resStatus == 401 || resStatus == 403) {
                         resBody.message = "Please re-login."
                     } else if (resStatus == 400) {

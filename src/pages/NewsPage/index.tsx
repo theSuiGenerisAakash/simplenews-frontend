@@ -13,6 +13,7 @@ import theme from "../../assets/styles/globalStyles"
 import goBackIcon from "../../assets/img/left-arrow.svg"
 import { FiltersContext } from "../../context/filters"
 import useLocalStorage from "../../hooks/useLocalStorage"
+import Pager from "../../components/Pager"
 
 const Body = styled.div`
     display: flex;
@@ -52,27 +53,35 @@ export default function NewsPage() {
     const { user, setUser } = useUser()
     const [newsList, setNewsList] = React.useState([])
     const [showBookmarked, setShowBookmarked] = React.useState(false)
+    let initialFilters = {
+        country: "in",
+        page: 1,
+        maxPage: false
+    }
     const [filters, setFilters] = useLocalStorage("filters", {})
     React.useLayoutEffect(() => {
-        let initialFilters = {
-            country: "in"
-        }
         if (!Object.keys(filters).length) {
-            setFilters({})
+            setFilters(initialFilters)
         } else {
             initialFilters = filters
         }
-        networkCall(`/news`, "POST", initialFilters).then((response) => {
+        const { maxPage, ...payload } = filters
+        networkCall(`/news`, "POST", payload).then((response) => {
             if (!response.body.message) {
                 setNewsList(response.body)
+                setFilters({ ...filters, maxPage: response.body.length < 20 ? true : false })
             }
         })
+    }, [JSON.stringify(filters)])
+
+    React.useEffect(() => {
         networkCall(`/news/${user.id}`, "GET").then((response) => {
             if (!response.body.message) {
                 setBookmarkedNews(response.body, "add")
             }
         })
     }, [])
+
     const { setAuthToken } = useAuth()
     const history = useHistory()
     const logout = () => {
@@ -107,6 +116,7 @@ export default function NewsPage() {
                             <>
                                 <FilterAndSearch passNewsUp={setNewsList} />
                                 <NewsSection newsList={newsList} />
+                                <Pager />
                             </>
                         )}
                 </Body>
