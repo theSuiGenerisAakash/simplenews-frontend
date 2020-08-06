@@ -11,6 +11,8 @@ import { networkCall } from "../../utils/networkCall"
 import useNewsBookmarker from "../../hooks/useNewsBookmarker"
 import theme from "../../assets/styles/globalStyles"
 import goBackIcon from "../../assets/img/left-arrow.svg"
+import { FiltersContext } from "../../context/filters"
+import useLocalStorage from "../../hooks/useLocalStorage"
 
 const Body = styled.div`
     display: flex;
@@ -50,10 +52,17 @@ export default function NewsPage() {
     const { user, setUser } = useUser()
     const [newsList, setNewsList] = React.useState([])
     const [showBookmarked, setShowBookmarked] = React.useState(false)
+    const [filters, setFilters] = useLocalStorage("filters", {})
     React.useLayoutEffect(() => {
-        networkCall(`/news`, "POST", {
+        let initialFilters = {
             country: "in"
-        }).then((response) => {
+        }
+        if (!filters) {
+            setFilters({})
+        } else {
+            initialFilters = filters
+        }
+        networkCall(`/news`, "POST", initialFilters).then((response) => {
             if (!response.body.message) {
                 setNewsList(response.body)
             }
@@ -75,30 +84,32 @@ export default function NewsPage() {
         setShowBookmarked(swch)
     }
     return (
-        <NewsContext.Provider value={{ bookmarkedNews, setBookmarkedNews }}>
-            <Header name={user.name} logout={logout} switchToBookmarks={switchToBookmarks} />
-            <Body>
-                {showBookmarked ? (
-                    <>
-                        <BookmarksHeading>
-                            <img
-                                className="go-back"
-                                src={goBackIcon}
-                                alt="Go Back"
-                                title="Go back"
-                                onClick={() => setShowBookmarked(false)}
-                            />
-                            <div className="your-bookmarks">Your bookmarks</div>
-                        </BookmarksHeading>
-                        <NewsSection newsList={bookmarkedNews} />
-                    </>
-                ) : (
+        <FiltersContext.Provider value={{ filters, setFilters }}>
+            <NewsContext.Provider value={{ bookmarkedNews, setBookmarkedNews }}>
+                <Header name={user.name} logout={logout} switchToBookmarks={switchToBookmarks} />
+                <Body>
+                    {showBookmarked ? (
                         <>
-                            <FilterAndSearch passNewsUp={setNewsList} />
-                            <NewsSection newsList={newsList} />
+                            <BookmarksHeading>
+                                <img
+                                    className="go-back"
+                                    src={goBackIcon}
+                                    alt="Go Back"
+                                    title="Go back"
+                                    onClick={() => setShowBookmarked(false)}
+                                />
+                                <div className="your-bookmarks">Your bookmarks</div>
+                            </BookmarksHeading>
+                            <NewsSection newsList={bookmarkedNews} />
                         </>
-                    )}
-            </Body>
-        </NewsContext.Provider>
+                    ) : (
+                            <>
+                                <FilterAndSearch passNewsUp={setNewsList} />
+                                <NewsSection newsList={newsList} />
+                            </>
+                        )}
+                </Body>
+            </NewsContext.Provider>
+        </FiltersContext.Provider>
     )
 }

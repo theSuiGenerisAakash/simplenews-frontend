@@ -6,8 +6,8 @@ import theme from "../../assets/styles/globalStyles"
 import SNButton from "../../components/Button"
 import { networkCall } from "../../utils/networkCall"
 import showToast from "../../utils/toast"
-import useLocalStorage from "../../hooks/useLocalStorage"
 const { getName } = require("country-list")
+import { useFilters } from "../../context/filters.ts"
 
 type Option = {
     value: string
@@ -34,8 +34,7 @@ const ContainerForm = styled.form`
 export default function FilterAndSearch(props: {
     passNewsUp: (arg: Record<string, unknown>[]) => void
 }) {
-    const [filters, setFilters] = useLocalStorage("filters", {})
-
+    const { filters, setFilters } = useFilters()
     const countryList: Option[] = [
         "ae",
         "ar",
@@ -124,12 +123,6 @@ export default function FilterAndSearch(props: {
             })
         }
     }
-
-    useLayoutEffect(() => {
-        if (!filters) {
-            setFilters({})
-        }
-    }, [])
 
     return (
         <Container>
