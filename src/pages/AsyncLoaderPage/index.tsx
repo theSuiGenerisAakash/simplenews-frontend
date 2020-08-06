@@ -1,9 +1,8 @@
-import LoaderPage from "../../pages/LoaderPage"
+import LoaderPage from "../SuspensePage"
 import { usePromiseTracker } from "react-promise-tracker"
 import React from "react"
 
-export default function AsyncLoader() {
+export default function AsyncLoaderPage() {
     const { promiseInProgress } = usePromiseTracker()
-    console.log(promiseInProgress)
     return promiseInProgress ? <LoaderPage /> : null
 }
