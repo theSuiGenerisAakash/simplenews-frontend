@@ -1,16 +1,17 @@
 import React from "react"
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
-import LoaderPage from "../../pages/LoaderPage"
+import SuspensePage from "../../pages/SuspensePage"
 const LoginPage = React.lazy(() => import("../../pages/LoginPage"))
 
 import PrivateRoute from "../Router/privateRoute"
+const NewsPage = React.lazy(() => import("../../pages/NewsPage"))
 
 export default function SNRoutes(): any {
     return (
         <Router>
-            <React.Suspense fallback={LoaderPage()}>
+            <React.Suspense fallback={SuspensePage()}>
                 <Switch>
-                    <PrivateRoute exact path="/" component={LoginPage} />
+                    <PrivateRoute exact path="/" component={NewsPage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Redirect from="*" to="/" />
                 </Switch>

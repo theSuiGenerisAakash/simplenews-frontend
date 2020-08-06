@@ -13,8 +13,12 @@ const getFromLocalStorage = (key: string, initialValue: unknown): any => {
 
 const saveToLocalStorage = (key: string, valueToStore: unknown): void => {
     try {
-        // Save to local storage
-        window.localStorage.setItem(key, JSON.stringify(valueToStore))
+        if (valueToStore) {
+            // Save to local storage
+            window.localStorage.setItem(key, JSON.stringify(valueToStore))
+        } else {
+            window.localStorage.removeItem(key)
+        }
     } catch (error) {
         // A more advanced implementation would handle the error case
         console.log(error)
