@@ -13,7 +13,9 @@ const toastOptions = {
 }
 
 const showToast = (status, message) => {
-    if (status < 299) {
+    if (status == 404) {
+        toast.info(message, toastOptions)
+    } else if (status < 299) {
         toast.success(message, toastOptions)
     } else {
         toast.error(message, toastOptions)
