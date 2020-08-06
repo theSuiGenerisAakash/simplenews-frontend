@@ -1,0 +1,33 @@
+@import "../../assets/styles/globalStyles.scss";
+
+.login-card {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 15em;
+    min-height: 15em;
+    max-height: 17em;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: large;
+    background-color: ghostwhite;
+    .login-header {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        height: 4em;
+        align-items: center;
+        background-color: $primary;
+        color: ghostwhite;
+        font-size: 24px;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5em 1em 0.5em 1em;
+    }
+}
