@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react"
+import React from "react"
 import styled from "styled-components"
 import SNSelect from "../../components/Select"
 import SNTextbox from "../../components/Textbox"
@@ -7,7 +7,7 @@ import SNButton from "../../components/Button"
 import { networkCall } from "../../utils/networkCall"
 import showToast from "../../utils/toast"
 const { getName } = require("country-list")
-import { useFilters } from "../../context/filters.ts"
+import { useFilters } from "../../context/filters"
 
 type Option = {
     value: string
