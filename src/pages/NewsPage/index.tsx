@@ -57,7 +57,7 @@ export default function NewsPage() {
         let initialFilters = {
             country: "in"
         }
-        if (!filters) {
+        if (!Object.keys(filters).length) {
             setFilters({})
         } else {
             initialFilters = filters
@@ -78,6 +78,7 @@ export default function NewsPage() {
     const logout = () => {
         setUser(null)
         setAuthToken(null)
+        setFilters({})
         history.push("/login")
     }
     const switchToBookmarks = (swch: boolean) => {
