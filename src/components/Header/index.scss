@@ -1,0 +1,37 @@
+@import "../../assets/styles/globalStyles.scss";
+
+header {
+    width: inherit;
+    height: 4em;
+    overflow: hidden;
+    background-color: $primary;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3em 1em;
+    color: whitesmoke;
+    .brand {
+        font-size: 1.5em;
+        display: flex;
+        align-items: center;
+    }
+    .user-details {
+        display: flex;
+        font-size: 1.5em;
+        align-items: center;
+        width: 9em;
+        justify-content: space-around;
+        .bookmarks-image {
+            width: 1.6em;
+            height: 2em;
+            cursor: pointer;
+        }
+        .logout-image {
+            width: 1.2em;
+            height: 1.2em;
+            cursor: pointer;
+        }
+        .name {
+            font-size: medium;
+        }
+    }
+}
