@@ -23,11 +23,18 @@
         font-size: 24px;
     }
 
-    .login-form {
+    form {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 1.5em 1em 0.5em 1em;
+        max-height: 12em;
+        .no-account-yet {
+            text-decoration: underline;
+            color: $primary;
+            font-size: 12px;
+            cursor: pointer;
+        }
     }
 }
