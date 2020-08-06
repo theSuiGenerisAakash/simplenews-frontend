@@ -13,6 +13,7 @@ const NewsImage = styled.img`
 const NewsTitle = styled.div`
     font-size: 20px;
     font-weight: bold;
+    padding: 0.5em 0;
 `
 
 const NewsSource = styled.div`
@@ -22,7 +23,7 @@ const NewsSource = styled.div`
     justify-content: space-between;
 `
 const NewsDescription = styled.div`
-    font-size: 16px;
+    font-size: 14px;
     padding: 0.5em 0;
     color: ${theme.secondary};
 `

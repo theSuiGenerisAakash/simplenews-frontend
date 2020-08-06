@@ -23,7 +23,6 @@ export const networkCall = async (pathWithParams: string, method: HTTP_VERBS, pa
                 try {
                     resBody = await response.json()
                 } catch (e) {
-                    console.log(response)
                     resBody = { message: response.statusText }
                 }
                 if (pathWithParams !== "/auth/login" && pathWithParams !== "/users/new-user") {

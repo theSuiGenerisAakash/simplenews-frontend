@@ -20,7 +20,7 @@ const Card = styled.div`
 const CardImage = styled.img`
     border-radius: 5px 5px 0 0;
     width: inherit;
-    height: 75%;
+    height: 73%;
 `
 
 const TitleContainer = styled.div`

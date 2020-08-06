@@ -4,7 +4,6 @@ import { useFilters } from "../../context/filters"
 
 function Pager() {
     const { filters, setFilters } = useFilters()
-    console.log(filters)
     return (
         <div>
             <SNButton
