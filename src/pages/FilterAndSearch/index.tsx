@@ -103,16 +103,23 @@ export default function FilterAndSearch(props: {
     ]
 
     const applyFilters = (event) => {
-        event.preventDefault()
-        const category = event.target.category.value
-        const country = event.target.country.value
-        const search = event.target.search.value
-        const payload = {
-            ...(category && { category }),
-            ...(country && { country }),
-            ...(search && { search })
+        let payload = { country: "in", page: 1, maxPage: false }
+        if (event) {
+            event.preventDefault()
+            const category = event.target.category.value
+            const country = event.target.country.value
+            const search = event.target.search.value
+            payload = {
+                ...(category && { category }),
+                ...(country && { country }),
+                ...(search && { search })
+            }
+            setFilters({ ...filters, ...payload })
+        } else {
+            setFilters(payload)
         }
-        setFilters(payload)
+
+        delete payload.maxPage
         if (Object.keys(payload).length === 0) {
             showToast(400, "Please fill at least one field")
         } else {
@@ -145,7 +152,8 @@ export default function FilterAndSearch(props: {
                     width="20rem"
                     initialValue={filters["search"]}
                 ></SNTextbox>
-                <SNButton colorTheme="primary" type="submit" name="apply" value="Apply" />
+                <SNButton type="submit" name="apply" value="Apply" />
+                {/* <SNButton name="clear" value="Clear" onClick={() => applyFilters(null)} /> */}
             </ContainerForm>
         </Container>
     )

@@ -3,7 +3,7 @@ import styled from "styled-components"
 import SNCard from "../../components/NewsCard"
 import { useNews } from "../../context/news"
 import NoContent from "../../components/NoContent"
-import SNModal from "../../components/SNModal"
+import SNModal from "../../components/Modal"
 
 const Section = styled.div`
     width: 80%;
