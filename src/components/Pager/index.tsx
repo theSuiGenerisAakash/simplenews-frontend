@@ -1,25 +1,26 @@
 import React from "react"
 import SNButton from "../../components/Button"
-import { useFilters } from "../../context/filters"
+import { isEqual } from "lodash"
 
-function Pager() {
-    const { filters, setFilters } = useFilters()
+function Pager(props: {
+    pageInfo: Record<string, unknown>
+    pageUp: () => void
+    pageDown: () => void
+}) {
+    const { pageInfo, pageUp, pageDown } = props
     return (
         <div>
             <SNButton
                 name="previous"
                 value="Previous"
-                disabled={filters.page === 1}
-                onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
+                disabled={pageInfo.page === 1}
+                onClick={pageDown}
             />
-            <SNButton
-                name="next"
-                value="Next"
-                disabled={filters.maxPage}
-                onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
-            />
+            <SNButton name="next" value="Next" disabled={pageInfo.lastPage} onClick={pageUp} />
         </div>
     )
 }
 
-export default React.memo(Pager)
+export default React.memo(Pager, (prevProps, nextProps) =>
+    isEqual(prevProps.pageInfo, nextProps.pageInfo)
+)

@@ -11,9 +11,9 @@ import { networkCall } from "../../utils/networkCall"
 import useNewsBookmarker from "../../hooks/useNewsBookmarker"
 import theme from "../../assets/styles/globalStyles"
 import goBackIcon from "../../assets/img/left-arrow.svg"
-import { FiltersContext } from "../../context/filters"
-import useLocalStorage from "../../hooks/useLocalStorage"
 import Pager from "../../components/Pager"
+import useLocalStorage from "../../hooks/useLocalStorage"
+import { isEqual } from "lodash"
 
 const Body = styled.div`
     display: flex;
@@ -51,28 +51,14 @@ const BookmarksHeading = styled.div`
 export default function NewsPage() {
     const [bookmarkedNews, setBookmarkedNews] = useNewsBookmarker()
     const { user, setUser } = useUser()
+    const { setAuthToken } = useAuth()
     const [newsList, setNewsList] = React.useState([])
     const [showBookmarked, setShowBookmarked] = React.useState(false)
-    let initialFilters = {
-        country: "in",
-        page: 1,
-        maxPage: false
-    }
-    const [filters, setFilters] = useLocalStorage("filters", {})
-    React.useLayoutEffect(() => {
-        if (!Object.keys(filters).length) {
-            setFilters(initialFilters)
-        } else {
-            initialFilters = filters
-        }
-        const { maxPage, ...payload } = filters
-        networkCall(`/news`, "POST", payload).then((response) => {
-            if (!response.body.message) {
-                setNewsList(response.body)
-                setFilters({ ...filters, maxPage: response.body.length < 20 ? true : false })
-            }
-        })
-    }, [JSON.stringify(filters)])
+    const defaultFilters = { country: "in" }
+    const defaultPageInfo = { page: 1, lastPage: true }
+    const [filters, setFilters] = useLocalStorage("filters", defaultFilters)
+    const [pageInfo, setPageInfo] = useLocalStorage("pageInfo", defaultPageInfo)
+    const history = useHistory()
 
     React.useEffect(() => {
         networkCall(`/news/${user.id}`, "GET").then((response) => {
@@ -82,45 +68,82 @@ export default function NewsPage() {
         })
     }, [])
 
-    const { setAuthToken } = useAuth()
-    const history = useHistory()
+    React.useEffect(() => {
+        const payload = { ...filters, page: pageInfo.page }
+        populateNews(payload)
+    }, [])
+
     const logout = () => {
         setUser(null)
         setAuthToken(null)
-        setFilters({})
+        setPageInfo(defaultPageInfo)
+        setFilters(defaultFilters)
         history.push("/login")
     }
-    const switchToBookmarks = (swch: boolean) => {
-        setShowBookmarked(swch)
+
+    const populateNews = async (payload: Record<string, unknown>) => {
+        delete payload.lastPage
+        const response = await networkCall(`/news`, "POST", payload)
+        if (!response.body.message) {
+            setNewsList(response.body)
+            if (response.body.length < 20) {
+                setPageInfo({ page: payload.page, lastPage: true })
+            } else {
+                setPageInfo({ page: payload.page, lastPage: false })
+            }
+        }
     }
+
+    const applyFilters = (filtersToSet, isPageReloaded = true, pageChange = 0) => {
+        let newPage
+        if (!isPageReloaded) {
+            if (!isEqual(filtersToSet, filters)) {
+                setFilters(filtersToSet)
+            }
+            newPage = pageChange ? pageChange : 1
+            populateNews({
+                ...filtersToSet,
+                page: newPage
+            })
+        } else {
+            newPage = pageChange ? pageChange : pageInfo.page
+            populateNews({
+                ...filtersToSet,
+                page: newPage
+            })
+        }
+    }
+
+    const pageUp = () => applyFilters(filters, false, pageInfo.page + 1)
+
+    const pageDown = () => applyFilters(filters, false, pageInfo.page - 1)
+
     return (
-        <FiltersContext.Provider value={{ filters, setFilters }}>
-            <NewsContext.Provider value={{ bookmarkedNews, setBookmarkedNews }}>
-                <Header name={user.name} logout={logout} switchToBookmarks={switchToBookmarks} />
-                <Body>
-                    {showBookmarked ? (
+        <NewsContext.Provider value={{ bookmarkedNews, setBookmarkedNews }}>
+            <Header name={user.name} logout={logout} switchToBookmarks={setShowBookmarked} />
+            <Body>
+                {showBookmarked ? (
+                    <>
+                        <BookmarksHeading>
+                            <img
+                                className="go-back"
+                                src={goBackIcon}
+                                alt="Go Back"
+                                title="Go back"
+                                onClick={() => setShowBookmarked(false)}
+                            />
+                            <div className="your-bookmarks">Your bookmarks</div>
+                        </BookmarksHeading>
+                        <NewsSection newsList={bookmarkedNews} />
+                    </>
+                ) : (
                         <>
-                            <BookmarksHeading>
-                                <img
-                                    className="go-back"
-                                    src={goBackIcon}
-                                    alt="Go Back"
-                                    title="Go back"
-                                    onClick={() => setShowBookmarked(false)}
-                                />
-                                <div className="your-bookmarks">Your bookmarks</div>
-                            </BookmarksHeading>
-                            <NewsSection newsList={bookmarkedNews} />
+                            <FilterAndSearch filters={filters} applyFilters={applyFilters} />
+                            <NewsSection newsList={newsList} />
+                            <Pager pageInfo={pageInfo} pageUp={pageUp} pageDown={pageDown} />
                         </>
-                    ) : (
-                            <>
-                                <FilterAndSearch passNewsUp={setNewsList} />
-                                <NewsSection newsList={newsList} />
-                                <Pager />
-                            </>
-                        )}
-                </Body>
-            </NewsContext.Provider>
-        </FiltersContext.Provider>
+                    )}
+            </Body>
+        </NewsContext.Provider>
     )
 }

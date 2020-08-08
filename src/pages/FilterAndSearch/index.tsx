@@ -4,10 +4,8 @@ import SNSelect from "../../components/Select"
 import SNTextbox from "../../components/Textbox"
 import theme from "../../assets/styles/globalStyles"
 import SNButton from "../../components/Button"
-import { networkCall } from "../../utils/networkCall"
-import showToast from "../../utils/toast"
 const { getName } = require("country-list")
-import { useFilters } from "../../context/filters"
+import { isEqual } from "lodash"
 
 type Option = {
     value: string
@@ -31,10 +29,11 @@ const ContainerForm = styled.form`
     justify-content: space-around;
 `
 
-export default function FilterAndSearch(props: {
-    passNewsUp: (arg: Record<string, unknown>[]) => void
+function FilterAndSearch(props: {
+    filters: Record<string, unknown>
+    applyFilters: (arg: Record<string, unknown> | null) => void
 }) {
-    const { filters, setFilters } = useFilters()
+    const { filters, applyFilters } = props
     const countryList: Option[] = [
         "ae",
         "ar",
@@ -102,38 +101,31 @@ export default function FilterAndSearch(props: {
         { value: "technology", label: "Technology" }
     ]
 
-    const applyFilters = (event) => {
-        let payload = { country: "in", page: 1, maxPage: false }
+    const applyFiltersHere = (event) => {
+        const defaultFilters = { country: "in" }
         if (event) {
             event.preventDefault()
             const category = event.target.category.value
             const country = event.target.country.value
             const search = event.target.search.value
-            payload = {
+            const filterPayload = {
                 ...(category && { category }),
                 ...(country && { country }),
                 ...(search && { search })
             }
-            setFilters({ ...filters, ...payload })
+            if (!isEqual(filterPayload, filters)) {
+                applyFilters({ ...defaultFilters, ...filterPayload }, false)
+            }
         } else {
-            setFilters(payload)
-        }
-
-        delete payload.maxPage
-        if (Object.keys(payload).length === 0) {
-            showToast(400, "Please fill at least one field")
-        } else {
-            networkCall("/news", "POST", payload).then((response) => {
-                if (response.status === 200) {
-                    props.passNewsUp(response.body)
-                }
-            })
+            if (!isEqual(defaultFilters, filters)) {
+                applyFilters(defaultFilters, false)
+            }
         }
     }
 
     return (
         <Container>
-            <ContainerForm onSubmit={applyFilters}>
+            <ContainerForm onSubmit={applyFiltersHere}>
                 <SNSelect
                     name="category"
                     options={catgeoryList}
@@ -153,8 +145,12 @@ export default function FilterAndSearch(props: {
                     initialValue={filters["search"]}
                 ></SNTextbox>
                 <SNButton type="submit" name="apply" value="Apply" />
-                {/* <SNButton name="clear" value="Clear" onClick={() => applyFilters(null)} /> */}
+                <SNButton name="clear" value="Clear" onClick={() => applyFiltersHere(null)} />
             </ContainerForm>
         </Container>
     )
 }
+
+export default React.memo(FilterAndSearch, (prevProps, nextProps) =>
+    isEqual(prevProps.filters, nextProps.filters)
+)
