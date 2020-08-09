@@ -144,8 +144,10 @@ function FilterAndSearch(props: {
                     width="20rem"
                     initialValue={filters["search"]}
                 ></SNTextbox>
-                <SNButton type="submit" name="apply" value="Apply" />
-                <SNButton name="clear" value="Clear" onClick={() => applyFiltersHere(null)} />
+                <span>
+                    <SNButton type="submit" name="apply" value="Apply" />
+                    <SNButton name="clear" value="Clear" onClick={() => applyFiltersHere(null)} />
+                </span>
             </ContainerForm>
         </Container>
     )

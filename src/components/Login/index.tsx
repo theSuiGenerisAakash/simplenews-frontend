@@ -104,32 +104,32 @@ function Login() {
                     </div>
                 </form>
             ) : (
-                <form onSubmit={createAcccount}>
-                    <SNTextbox
-                        name="username"
-                        placeholder="Username"
-                        required={true}
-                        autocomplete="username"
-                    />
-                    <SNTextbox name="name" placeholder="Name" required={true} autocomplete="name" />
-                    <SNTextbox
-                        type="password"
-                        name="passwordCreate"
-                        placeholder="Password"
-                        required={true}
-                        autocomplete="new-password"
-                    />
-                    <SNButton
-                        colorTheme="primary"
-                        type="submit"
-                        name="create-acccount"
-                        value="Sign up"
-                    />
-                    <div className="no-account-yet" onClick={() => setFormType("login")}>
-                        Login
+                    <form onSubmit={createAcccount}>
+                        <SNTextbox
+                            name="username"
+                            placeholder="Username"
+                            required={true}
+                            autocomplete="username"
+                        />
+                        <SNTextbox name="name" placeholder="Name" required={true} autocomplete="name" />
+                        <SNTextbox
+                            type="password"
+                            name="passwordCreate"
+                            placeholder="Password"
+                            required={true}
+                            autocomplete="new-password"
+                        />
+                        <SNButton
+                            colorTheme="primary"
+                            type="submit"
+                            name="create-acccount"
+                            value="Sign up"
+                        />
+                        <div className="no-account-yet" onClick={() => setFormType("login")}>
+                            Login
                     </div>
-                </form>
-            )}
+                    </form>
+                )}
         </div>
     )
 }

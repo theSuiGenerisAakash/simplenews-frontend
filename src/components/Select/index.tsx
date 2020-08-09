@@ -25,13 +25,24 @@ const colourStyles = {
     menu: (styles) => ({ ...styles, width: 200 })
 }
 
-const SNSelect = (props: { options: Option[]; name: string; defaultValue: string }) => (
-    <Select
-        options={props.options}
-        styles={colourStyles}
-        name={props.name}
-        defaultValue={props.options.filter((option) => option.value === props.defaultValue)[0]}
-    />
-)
+const SNSelect = (props: { options: Option[]; name: string; defaultValue: string }) => {
+    const { options, name, defaultValue } = props
+    const [value, setValue] = React.useState(defaultValue)
+    React.useEffect(() => {
+        const filterValtoSet = options.filter((option) => option.value === defaultValue)
+        const valueToSet = filterValtoSet.length ? filterValtoSet[0] : null
+        setValue(valueToSet)
+    }, [defaultValue])
+
+    return (
+        <Select
+            options={options}
+            styles={colourStyles}
+            name={name}
+            value={value}
+            onChange={setValue}
+        />
+    )
+}
 
 export default SNSelect

@@ -27,7 +27,9 @@ function SNTexbox(props: {
     fontSize: string
     width: string
 }) {
-    const [value, setValue] = useState(props.initialValue)
+    const { initialValue } = props
+    const [value, setValue] = useState(initialValue)
+    React.useEffect(() => setValue(initialValue), [initialValue])
     return (
         <Textbox
             type={props.type}
